@@ -1,0 +1,28 @@
+services:
+    dbhost:
+      image: quanticschoolofbusiness/103mysql
+    app:
+      build: app/.
+      ports: 
+        - 3006:3006
+      depends_on:
+        - dbhost
+        - redis-server
+    redis-server:
+      image: redis
+    email:
+      build: email/.
+      ports: 
+        - 25:25
+      depends_on:
+        - redis-server
+      env_file: .env
+    db-loader:
+      build: db-loader/.
+      volumes: 
+        - C:/Users/johnr/Desktop/allergy-lab-watchfolder:/mnt/watchfolder/
+      environment:
+        FOLDER_PATH: /mnt/watchfolder/
+      env_file: .env
+      depends_on:
+        - dbhost
